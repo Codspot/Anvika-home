@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { findBundledPluginByNpmSpec, resolveBundledPluginSources } from "./bundled-sources.js";
 
-const discoverOpenClawPluginsMock = vi.fn();
+const discoverAnvikaPluginsMock = vi.fn();
 const loadPluginManifestMock = vi.fn();
 
 vi.mock("./discovery.js", () => ({
-  discoverOpenClawPlugins: (...args: unknown[]) => discoverOpenClawPluginsMock(...args),
+  discoverAnvikaPlugins: (...args: unknown[]) => discoverAnvikaPluginsMock(...args),
 }));
 
 vi.mock("./manifest.js", () => ({
@@ -14,36 +14,36 @@ vi.mock("./manifest.js", () => ({
 
 describe("bundled plugin sources", () => {
   beforeEach(() => {
-    discoverOpenClawPluginsMock.mockReset();
+    discoverAnvikaPluginsMock.mockReset();
     loadPluginManifestMock.mockReset();
   });
 
   it("resolves bundled sources keyed by plugin id", () => {
-    discoverOpenClawPluginsMock.mockReturnValue({
+    discoverAnvikaPluginsMock.mockReturnValue({
       candidates: [
         {
           origin: "global",
           rootDir: "/global/feishu",
-          packageName: "@openclaw/feishu",
-          packageManifest: { install: { npmSpec: "@openclaw/feishu" } },
+          packageName: "@anvika/feishu",
+          packageManifest: { install: { npmSpec: "@anvika/feishu" } },
         },
         {
           origin: "bundled",
           rootDir: "/app/extensions/feishu",
-          packageName: "@openclaw/feishu",
-          packageManifest: { install: { npmSpec: "@openclaw/feishu" } },
+          packageName: "@anvika/feishu",
+          packageManifest: { install: { npmSpec: "@anvika/feishu" } },
         },
         {
           origin: "bundled",
           rootDir: "/app/extensions/feishu-dup",
-          packageName: "@openclaw/feishu",
-          packageManifest: { install: { npmSpec: "@openclaw/feishu" } },
+          packageName: "@anvika/feishu",
+          packageManifest: { install: { npmSpec: "@anvika/feishu" } },
         },
         {
           origin: "bundled",
           rootDir: "/app/extensions/msteams",
-          packageName: "@openclaw/msteams",
-          packageManifest: { install: { npmSpec: "@openclaw/msteams" } },
+          packageName: "@anvika/msteams",
+          packageManifest: { install: { npmSpec: "@anvika/msteams" } },
         },
       ],
       diagnostics: [],
@@ -59,7 +59,7 @@ describe("bundled plugin sources", () => {
       return {
         ok: false,
         error: "invalid manifest",
-        manifestPath: `${rootDir}/openclaw.plugin.json`,
+        manifestPath: `${rootDir}/anvika.plugin.json`,
       };
     });
 
@@ -69,26 +69,26 @@ describe("bundled plugin sources", () => {
     expect(map.get("feishu")).toEqual({
       pluginId: "feishu",
       localPath: "/app/extensions/feishu",
-      npmSpec: "@openclaw/feishu",
+      npmSpec: "@anvika/feishu",
     });
   });
 
   it("finds bundled source by npm spec", () => {
-    discoverOpenClawPluginsMock.mockReturnValue({
+    discoverAnvikaPluginsMock.mockReturnValue({
       candidates: [
         {
           origin: "bundled",
           rootDir: "/app/extensions/feishu",
-          packageName: "@openclaw/feishu",
-          packageManifest: { install: { npmSpec: "@openclaw/feishu" } },
+          packageName: "@anvika/feishu",
+          packageManifest: { install: { npmSpec: "@anvika/feishu" } },
         },
       ],
       diagnostics: [],
     });
     loadPluginManifestMock.mockReturnValue({ ok: true, manifest: { id: "feishu" } });
 
-    const resolved = findBundledPluginByNpmSpec({ spec: "@openclaw/feishu" });
-    const missing = findBundledPluginByNpmSpec({ spec: "@openclaw/not-found" });
+    const resolved = findBundledPluginByNpmSpec({ spec: "@anvika/feishu" });
+    const missing = findBundledPluginByNpmSpec({ spec: "@anvika/not-found" });
 
     expect(resolved?.pluginId).toBe("feishu");
     expect(resolved?.localPath).toBe("/app/extensions/feishu");

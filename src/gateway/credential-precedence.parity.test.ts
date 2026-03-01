@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { resolveGatewayProbeAuth as resolveStatusGatewayProbeAuth } from "../commands/status.gateway-probe.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { AnvikaConfig } from "../config/config.js";
 import { resolveGatewayAuth } from "./auth.js";
 import { resolveGatewayCredentialsFromConfig } from "./credentials.js";
 import { resolveGatewayProbeAuth } from "./probe-auth.js";
@@ -14,17 +14,17 @@ type ExpectedCredentialSet = {
 
 type TestCase = {
   name: string;
-  cfg: OpenClawConfig;
+  cfg: AnvikaConfig;
   env: NodeJS.ProcessEnv;
   expected: ExpectedCredentialSet;
 };
 
 const gatewayEnv = {
-  OPENCLAW_GATEWAY_TOKEN: "env-token",
-  OPENCLAW_GATEWAY_PASSWORD: "env-password",
+  ANVIKA_GATEWAY_TOKEN: "env-token",
+  ANVIKA_GATEWAY_PASSWORD: "env-password",
 } as NodeJS.ProcessEnv;
 
-function makeRemoteGatewayConfig(remote: { token?: string; password?: string }): OpenClawConfig {
+function makeRemoteGatewayConfig(remote: { token?: string; password?: string }): AnvikaConfig {
   return {
     gateway: {
       mode: "remote",
@@ -34,13 +34,13 @@ function makeRemoteGatewayConfig(remote: { token?: string; password?: string }):
         password: "local-password",
       },
     },
-  } as OpenClawConfig;
+  } as AnvikaConfig;
 }
 
 function withGatewayAuthEnv<T>(env: NodeJS.ProcessEnv, fn: () => T): T {
   const keys = [
-    "OPENCLAW_GATEWAY_TOKEN",
-    "OPENCLAW_GATEWAY_PASSWORD",
+    "ANVIKA_GATEWAY_TOKEN",
+    "ANVIKA_GATEWAY_PASSWORD",
     "CLAWDBOT_GATEWAY_TOKEN",
     "CLAWDBOT_GATEWAY_PASSWORD",
   ] as const;
@@ -80,10 +80,10 @@ describe("gateway credential precedence parity", () => {
             password: "config-password",
           },
         },
-      } as OpenClawConfig,
+      } as AnvikaConfig,
       env: {
-        OPENCLAW_GATEWAY_TOKEN: "env-token",
-        OPENCLAW_GATEWAY_PASSWORD: "env-password",
+        ANVIKA_GATEWAY_TOKEN: "env-token",
+        ANVIKA_GATEWAY_PASSWORD: "env-password",
       } as NodeJS.ProcessEnv,
       expected: {
         call: { token: "env-token", password: "env-password" },
@@ -126,7 +126,7 @@ describe("gateway credential precedence parity", () => {
           mode: "local",
           auth: {},
         },
-      } as OpenClawConfig,
+      } as AnvikaConfig,
       env: {
         CLAWDBOT_GATEWAY_TOKEN: "legacy-token",
         CLAWDBOT_GATEWAY_PASSWORD: "legacy-password",

@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/matrix",
+  "name": "@anvika/matrix",
   "version": "2026.2.27",
-  "description": "OpenClaw Matrix channel plugin",
+  "description": "Anvika Matrix channel plugin",
   "type": "module",
   "dependencies": {
     "@matrix-org/matrix-sdk-crypto-nodejs": "^0.4.0",
@@ -10,7 +10,7 @@
     "music-metadata": "^11.12.1",
     "zod": "^4.3.6"
   },
-  "openclaw": {
+  "anvika": {
     "extensions": [
       "./index.ts"
     ],
@@ -25,7 +25,7 @@
       "quickstartAllowFrom": true
     },
     "install": {
-      "npmSpec": "@openclaw/matrix",
+      "npmSpec": "@anvika/matrix",
       "localPath": "extensions/matrix",
       "defaultChoice": "npm"
     }

@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/signal",
+  "name": "@anvika/signal",
   "version": "2026.2.27",
   "private": true,
-  "description": "OpenClaw Signal channel plugin",
+  "description": "Anvika Signal channel plugin",
   "type": "module",
-  "openclaw": {
+  "anvika": {
     "extensions": [
       "./index.ts"
     ]

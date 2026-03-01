@@ -6,7 +6,7 @@ import CryptoKit
 import EventKit
 import Foundation
 import Darwin
-import OpenClawKit
+import AnvikaKit
 import Network
 import Observation
 import Photos
@@ -754,7 +754,7 @@ final class GatewayConnectionController {
         if manualClientId?.isEmpty == false {
             return manualClientId!
         }
-        return "openclaw-ios"
+        return "anvika-ios"
     }
 
     private func resolveManualPort(host: String, port: Int, useTLS: Bool) -> Int? {
@@ -784,32 +784,32 @@ final class GatewayConnectionController {
     }
 
     private func currentCaps() -> [String] {
-        var caps = [OpenClawCapability.canvas.rawValue, OpenClawCapability.screen.rawValue]
+        var caps = [AnvikaCapability.canvas.rawValue, AnvikaCapability.screen.rawValue]
 
         // Default-on: if the key doesn't exist yet, treat it as enabled.
         let cameraEnabled =
             UserDefaults.standard.object(forKey: "camera.enabled") == nil
                 ? true
                 : UserDefaults.standard.bool(forKey: "camera.enabled")
-        if cameraEnabled { caps.append(OpenClawCapability.camera.rawValue) }
+        if cameraEnabled { caps.append(AnvikaCapability.camera.rawValue) }
 
         let voiceWakeEnabled = UserDefaults.standard.bool(forKey: VoiceWakePreferences.enabledKey)
-        if voiceWakeEnabled { caps.append(OpenClawCapability.voiceWake.rawValue) }
+        if voiceWakeEnabled { caps.append(AnvikaCapability.voiceWake.rawValue) }
 
         let locationModeRaw = UserDefaults.standard.string(forKey: "location.enabledMode") ?? "off"
-        let locationMode = OpenClawLocationMode(rawValue: locationModeRaw) ?? .off
-        if locationMode != .off { caps.append(OpenClawCapability.location.rawValue) }
+        let locationMode = AnvikaLocationMode(rawValue: locationModeRaw) ?? .off
+        if locationMode != .off { caps.append(AnvikaCapability.location.rawValue) }
 
-        caps.append(OpenClawCapability.device.rawValue)
+        caps.append(AnvikaCapability.device.rawValue)
         if WatchMessagingService.isSupportedOnDevice() {
-            caps.append(OpenClawCapability.watch.rawValue)
+            caps.append(AnvikaCapability.watch.rawValue)
         }
-        caps.append(OpenClawCapability.photos.rawValue)
-        caps.append(OpenClawCapability.contacts.rawValue)
-        caps.append(OpenClawCapability.calendar.rawValue)
-        caps.append(OpenClawCapability.reminders.rawValue)
+        caps.append(AnvikaCapability.photos.rawValue)
+        caps.append(AnvikaCapability.contacts.rawValue)
+        caps.append(AnvikaCapability.calendar.rawValue)
+        caps.append(AnvikaCapability.reminders.rawValue)
         if Self.motionAvailable() {
-            caps.append(OpenClawCapability.motion.rawValue)
+            caps.append(AnvikaCapability.motion.rawValue)
         }
 
         return caps
@@ -817,58 +817,58 @@ final class GatewayConnectionController {
 
     private func currentCommands() -> [String] {
         var commands: [String] = [
-            OpenClawCanvasCommand.present.rawValue,
-            OpenClawCanvasCommand.hide.rawValue,
-            OpenClawCanvasCommand.navigate.rawValue,
-            OpenClawCanvasCommand.evalJS.rawValue,
-            OpenClawCanvasCommand.snapshot.rawValue,
-            OpenClawCanvasA2UICommand.push.rawValue,
-            OpenClawCanvasA2UICommand.pushJSONL.rawValue,
-            OpenClawCanvasA2UICommand.reset.rawValue,
-            OpenClawScreenCommand.record.rawValue,
-            OpenClawSystemCommand.notify.rawValue,
-            OpenClawChatCommand.push.rawValue,
-            OpenClawTalkCommand.pttStart.rawValue,
-            OpenClawTalkCommand.pttStop.rawValue,
-            OpenClawTalkCommand.pttCancel.rawValue,
-            OpenClawTalkCommand.pttOnce.rawValue,
+            AnvikaCanvasCommand.present.rawValue,
+            AnvikaCanvasCommand.hide.rawValue,
+            AnvikaCanvasCommand.navigate.rawValue,
+            AnvikaCanvasCommand.evalJS.rawValue,
+            AnvikaCanvasCommand.snapshot.rawValue,
+            AnvikaCanvasA2UICommand.push.rawValue,
+            AnvikaCanvasA2UICommand.pushJSONL.rawValue,
+            AnvikaCanvasA2UICommand.reset.rawValue,
+            AnvikaScreenCommand.record.rawValue,
+            AnvikaSystemCommand.notify.rawValue,
+            AnvikaChatCommand.push.rawValue,
+            AnvikaTalkCommand.pttStart.rawValue,
+            AnvikaTalkCommand.pttStop.rawValue,
+            AnvikaTalkCommand.pttCancel.rawValue,
+            AnvikaTalkCommand.pttOnce.rawValue,
         ]
 
         let caps = Set(self.currentCaps())
-        if caps.contains(OpenClawCapability.camera.rawValue) {
-            commands.append(OpenClawCameraCommand.list.rawValue)
-            commands.append(OpenClawCameraCommand.snap.rawValue)
-            commands.append(OpenClawCameraCommand.clip.rawValue)
+        if caps.contains(AnvikaCapability.camera.rawValue) {
+            commands.append(AnvikaCameraCommand.list.rawValue)
+            commands.append(AnvikaCameraCommand.snap.rawValue)
+            commands.append(AnvikaCameraCommand.clip.rawValue)
         }
-        if caps.contains(OpenClawCapability.location.rawValue) {
-            commands.append(OpenClawLocationCommand.get.rawValue)
+        if caps.contains(AnvikaCapability.location.rawValue) {
+            commands.append(AnvikaLocationCommand.get.rawValue)
         }
-        if caps.contains(OpenClawCapability.device.rawValue) {
-            commands.append(OpenClawDeviceCommand.status.rawValue)
-            commands.append(OpenClawDeviceCommand.info.rawValue)
+        if caps.contains(AnvikaCapability.device.rawValue) {
+            commands.append(AnvikaDeviceCommand.status.rawValue)
+            commands.append(AnvikaDeviceCommand.info.rawValue)
         }
-        if caps.contains(OpenClawCapability.watch.rawValue) {
-            commands.append(OpenClawWatchCommand.status.rawValue)
-            commands.append(OpenClawWatchCommand.notify.rawValue)
+        if caps.contains(AnvikaCapability.watch.rawValue) {
+            commands.append(AnvikaWatchCommand.status.rawValue)
+            commands.append(AnvikaWatchCommand.notify.rawValue)
         }
-        if caps.contains(OpenClawCapability.photos.rawValue) {
-            commands.append(OpenClawPhotosCommand.latest.rawValue)
+        if caps.contains(AnvikaCapability.photos.rawValue) {
+            commands.append(AnvikaPhotosCommand.latest.rawValue)
         }
-        if caps.contains(OpenClawCapability.contacts.rawValue) {
-            commands.append(OpenClawContactsCommand.search.rawValue)
-            commands.append(OpenClawContactsCommand.add.rawValue)
+        if caps.contains(AnvikaCapability.contacts.rawValue) {
+            commands.append(AnvikaContactsCommand.search.rawValue)
+            commands.append(AnvikaContactsCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.calendar.rawValue) {
-            commands.append(OpenClawCalendarCommand.events.rawValue)
-            commands.append(OpenClawCalendarCommand.add.rawValue)
+        if caps.contains(AnvikaCapability.calendar.rawValue) {
+            commands.append(AnvikaCalendarCommand.events.rawValue)
+            commands.append(AnvikaCalendarCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.reminders.rawValue) {
-            commands.append(OpenClawRemindersCommand.list.rawValue)
-            commands.append(OpenClawRemindersCommand.add.rawValue)
+        if caps.contains(AnvikaCapability.reminders.rawValue) {
+            commands.append(AnvikaRemindersCommand.list.rawValue)
+            commands.append(AnvikaRemindersCommand.add.rawValue)
         }
-        if caps.contains(OpenClawCapability.motion.rawValue) {
-            commands.append(OpenClawMotionCommand.activity.rawValue)
-            commands.append(OpenClawMotionCommand.pedometer.rawValue)
+        if caps.contains(AnvikaCapability.motion.rawValue) {
+            commands.append(AnvikaMotionCommand.activity.rawValue)
+            commands.append(AnvikaMotionCommand.pedometer.rawValue)
         }
 
         return commands

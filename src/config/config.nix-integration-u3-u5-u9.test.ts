@@ -18,7 +18,7 @@ function envWith(overrides: Record<string, string | undefined>): NodeJS.ProcessE
 
 function loadConfigForHome(home: string) {
   return createConfigIO({
-    env: envWith({ OPENCLAW_HOME: home }),
+    env: envWith({ ANVIKA_HOME: home }),
     homedir: () => home,
   }).loadConfig();
 }
@@ -35,84 +35,84 @@ async function withLoadedConfigForHome(
 
 describe("Nix integration (U3, U5, U9)", () => {
   describe("U3: isNixMode env var detection", () => {
-    it("isNixMode is false when OPENCLAW_NIX_MODE is not set", () => {
-      expect(resolveIsNixMode(envWith({ OPENCLAW_NIX_MODE: undefined }))).toBe(false);
+    it("isNixMode is false when ANVIKA_NIX_MODE is not set", () => {
+      expect(resolveIsNixMode(envWith({ ANVIKA_NIX_MODE: undefined }))).toBe(false);
     });
 
-    it("isNixMode is false when OPENCLAW_NIX_MODE is empty", () => {
-      expect(resolveIsNixMode(envWith({ OPENCLAW_NIX_MODE: "" }))).toBe(false);
+    it("isNixMode is false when ANVIKA_NIX_MODE is empty", () => {
+      expect(resolveIsNixMode(envWith({ ANVIKA_NIX_MODE: "" }))).toBe(false);
     });
 
-    it("isNixMode is false when OPENCLAW_NIX_MODE is not '1'", () => {
-      expect(resolveIsNixMode(envWith({ OPENCLAW_NIX_MODE: "true" }))).toBe(false);
+    it("isNixMode is false when ANVIKA_NIX_MODE is not '1'", () => {
+      expect(resolveIsNixMode(envWith({ ANVIKA_NIX_MODE: "true" }))).toBe(false);
     });
 
-    it("isNixMode is true when OPENCLAW_NIX_MODE=1", () => {
-      expect(resolveIsNixMode(envWith({ OPENCLAW_NIX_MODE: "1" }))).toBe(true);
+    it("isNixMode is true when ANVIKA_NIX_MODE=1", () => {
+      expect(resolveIsNixMode(envWith({ ANVIKA_NIX_MODE: "1" }))).toBe(true);
     });
   });
 
   describe("U5: CONFIG_PATH and STATE_DIR env var overrides", () => {
-    it("STATE_DIR defaults to ~/.openclaw when env not set", () => {
-      expect(resolveStateDir(envWith({ OPENCLAW_STATE_DIR: undefined }))).toMatch(/\.openclaw$/);
+    it("STATE_DIR defaults to ~/.anvika when env not set", () => {
+      expect(resolveStateDir(envWith({ ANVIKA_STATE_DIR: undefined }))).toMatch(/\.anvika$/);
     });
 
-    it("STATE_DIR respects OPENCLAW_STATE_DIR override", () => {
-      expect(resolveStateDir(envWith({ OPENCLAW_STATE_DIR: "/custom/state/dir" }))).toBe(
+    it("STATE_DIR respects ANVIKA_STATE_DIR override", () => {
+      expect(resolveStateDir(envWith({ ANVIKA_STATE_DIR: "/custom/state/dir" }))).toBe(
         path.resolve("/custom/state/dir"),
       );
     });
 
-    it("STATE_DIR respects OPENCLAW_HOME when state override is unset", () => {
+    it("STATE_DIR respects ANVIKA_HOME when state override is unset", () => {
       const customHome = path.join(path.sep, "custom", "home");
       expect(
-        resolveStateDir(envWith({ OPENCLAW_HOME: customHome, OPENCLAW_STATE_DIR: undefined })),
-      ).toBe(path.join(path.resolve(customHome), ".openclaw"));
+        resolveStateDir(envWith({ ANVIKA_HOME: customHome, ANVIKA_STATE_DIR: undefined })),
+      ).toBe(path.join(path.resolve(customHome), ".anvika"));
     });
 
-    it("CONFIG_PATH defaults to OPENCLAW_HOME/.openclaw/openclaw.json", () => {
+    it("CONFIG_PATH defaults to ANVIKA_HOME/.anvika/anvika.json", () => {
       const customHome = path.join(path.sep, "custom", "home");
       expect(
         resolveConfigPathCandidate(
           envWith({
-            OPENCLAW_HOME: customHome,
-            OPENCLAW_CONFIG_PATH: undefined,
-            OPENCLAW_STATE_DIR: undefined,
+            ANVIKA_HOME: customHome,
+            ANVIKA_CONFIG_PATH: undefined,
+            ANVIKA_STATE_DIR: undefined,
           }),
         ),
-      ).toBe(path.join(path.resolve(customHome), ".openclaw", "openclaw.json"));
+      ).toBe(path.join(path.resolve(customHome), ".anvika", "anvika.json"));
     });
 
-    it("CONFIG_PATH defaults to ~/.openclaw/openclaw.json when env not set", () => {
+    it("CONFIG_PATH defaults to ~/.anvika/anvika.json when env not set", () => {
       expect(
         resolveConfigPathCandidate(
-          envWith({ OPENCLAW_CONFIG_PATH: undefined, OPENCLAW_STATE_DIR: undefined }),
+          envWith({ ANVIKA_CONFIG_PATH: undefined, ANVIKA_STATE_DIR: undefined }),
         ),
-      ).toMatch(/\.openclaw[\\/]openclaw\.json$/);
+      ).toMatch(/\.anvika[\\/]anvika\.json$/);
     });
 
-    it("CONFIG_PATH respects OPENCLAW_CONFIG_PATH override", () => {
+    it("CONFIG_PATH respects ANVIKA_CONFIG_PATH override", () => {
       expect(
         resolveConfigPathCandidate(
-          envWith({ OPENCLAW_CONFIG_PATH: "/nix/store/abc/openclaw.json" }),
+          envWith({ ANVIKA_CONFIG_PATH: "/nix/store/abc/anvika.json" }),
         ),
-      ).toBe(path.resolve("/nix/store/abc/openclaw.json"));
+      ).toBe(path.resolve("/nix/store/abc/anvika.json"));
     });
 
-    it("CONFIG_PATH expands ~ in OPENCLAW_CONFIG_PATH override", async () => {
+    it("CONFIG_PATH expands ~ in ANVIKA_CONFIG_PATH override", async () => {
       await withTempHome(async (home) => {
         expect(
           resolveConfigPathCandidate(
-            envWith({ OPENCLAW_HOME: home, OPENCLAW_CONFIG_PATH: "~/.openclaw/custom.json" }),
+            envWith({ ANVIKA_HOME: home, ANVIKA_CONFIG_PATH: "~/.anvika/custom.json" }),
             () => home,
           ),
-        ).toBe(path.join(home, ".openclaw", "custom.json"));
+        ).toBe(path.join(home, ".anvika", "custom.json"));
       });
     });
 
     it("CONFIG_PATH uses STATE_DIR when only state dir is overridden", () => {
-      expect(resolveConfigPathCandidate(envWith({ OPENCLAW_STATE_DIR: "/custom/state" }))).toBe(
-        path.join(path.resolve("/custom/state"), "openclaw.json"),
+      expect(resolveConfigPathCandidate(envWith({ ANVIKA_STATE_DIR: "/custom/state" }))).toBe(
+        path.join(path.resolve("/custom/state"), "anvika.json"),
       );
     });
   });
@@ -120,7 +120,7 @@ describe("Nix integration (U3, U5, U9)", () => {
   describe("U5b: tilde expansion for config paths", () => {
     it("expands ~ in common path-ish config fields", async () => {
       await withTempHome(async (home) => {
-        const configDir = path.join(home, ".openclaw");
+        const configDir = path.join(home, ".anvika");
         await fs.mkdir(configDir, { recursive: true });
         const pluginDir = path.join(home, "plugins", "demo-plugin");
         await fs.mkdir(pluginDir, { recursive: true });
@@ -130,7 +130,7 @@ describe("Nix integration (U3, U5, U9)", () => {
           "utf-8",
         );
         await fs.writeFile(
-          path.join(pluginDir, "openclaw.plugin.json"),
+          path.join(pluginDir, "anvika.plugin.json"),
           JSON.stringify(
             {
               id: "demo-plugin",
@@ -142,7 +142,7 @@ describe("Nix integration (U3, U5, U9)", () => {
           "utf-8",
         );
         await fs.writeFile(
-          path.join(configDir, "openclaw.json"),
+          path.join(configDir, "anvika.json"),
           JSON.stringify(
             {
               plugins: {
@@ -156,7 +156,7 @@ describe("Nix integration (U3, U5, U9)", () => {
                   {
                     id: "main",
                     workspace: "~/ws-agent",
-                    agentDir: "~/.openclaw/agents/main",
+                    agentDir: "~/.anvika/agents/main",
                     sandbox: { workspaceRoot: "~/sandbox-root" },
                   },
                 ],
@@ -165,7 +165,7 @@ describe("Nix integration (U3, U5, U9)", () => {
                 whatsapp: {
                   accounts: {
                     personal: {
-                      authDir: "~/.openclaw/credentials/wa-personal",
+                      authDir: "~/.anvika/credentials/wa-personal",
                     },
                   },
                 },
@@ -183,11 +183,11 @@ describe("Nix integration (U3, U5, U9)", () => {
         expect(cfg.agents?.defaults?.workspace).toBe(path.join(home, "ws-default"));
         expect(cfg.agents?.list?.[0]?.workspace).toBe(path.join(home, "ws-agent"));
         expect(cfg.agents?.list?.[0]?.agentDir).toBe(
-          path.join(home, ".openclaw", "agents", "main"),
+          path.join(home, ".anvika", "agents", "main"),
         );
         expect(cfg.agents?.list?.[0]?.sandbox?.workspaceRoot).toBe(path.join(home, "sandbox-root"));
         expect(cfg.channels?.whatsapp?.accounts?.personal?.authDir).toBe(
-          path.join(home, ".openclaw", "credentials", "wa-personal"),
+          path.join(home, ".anvika", "credentials", "wa-personal"),
         );
       });
     });
@@ -195,16 +195,16 @@ describe("Nix integration (U3, U5, U9)", () => {
 
   describe("U6: gateway port resolution", () => {
     it("uses default when env and config are unset", () => {
-      expect(resolveGatewayPort({}, envWith({ OPENCLAW_GATEWAY_PORT: undefined }))).toBe(
+      expect(resolveGatewayPort({}, envWith({ ANVIKA_GATEWAY_PORT: undefined }))).toBe(
         DEFAULT_GATEWAY_PORT,
       );
     });
 
-    it("prefers OPENCLAW_GATEWAY_PORT over config", () => {
+    it("prefers ANVIKA_GATEWAY_PORT over config", () => {
       expect(
         resolveGatewayPort(
           { gateway: { port: 19002 } },
-          envWith({ OPENCLAW_GATEWAY_PORT: "19001" }),
+          envWith({ ANVIKA_GATEWAY_PORT: "19001" }),
         ),
       ).toBe(19001);
     });
@@ -213,7 +213,7 @@ describe("Nix integration (U3, U5, U9)", () => {
       expect(
         resolveGatewayPort(
           { gateway: { port: 19003 } },
-          envWith({ OPENCLAW_GATEWAY_PORT: "nope" }),
+          envWith({ ANVIKA_GATEWAY_PORT: "nope" }),
         ),
       ).toBe(19003);
     });

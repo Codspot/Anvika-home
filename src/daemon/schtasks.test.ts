@@ -7,7 +7,7 @@ import { parseSchtasksQuery, readScheduledTaskCommand, resolveTaskScriptPath } f
 describe("schtasks runtime parsing", () => {
   it.each(["Ready", "Running"])("parses %s status", (status) => {
     const output = [
-      "TaskName: \\OpenClaw Gateway",
+      "TaskName: \\Anvika Gateway",
       `Status: ${status}`,
       "Last Run Time: 1/8/2026 1:23:45 AM",
       "Last Run Result: 0x0",
@@ -23,28 +23,28 @@ describe("schtasks runtime parsing", () => {
 describe("resolveTaskScriptPath", () => {
   it.each([
     {
-      name: "uses default path when OPENCLAW_PROFILE is unset",
+      name: "uses default path when ANVIKA_PROFILE is unset",
       env: { USERPROFILE: "C:\\Users\\test" },
-      expected: path.join("C:\\Users\\test", ".openclaw", "gateway.cmd"),
+      expected: path.join("C:\\Users\\test", ".anvika", "gateway.cmd"),
     },
     {
-      name: "uses profile-specific path when OPENCLAW_PROFILE is set to a custom value",
-      env: { USERPROFILE: "C:\\Users\\test", OPENCLAW_PROFILE: "jbphoenix" },
-      expected: path.join("C:\\Users\\test", ".openclaw-jbphoenix", "gateway.cmd"),
+      name: "uses profile-specific path when ANVIKA_PROFILE is set to a custom value",
+      env: { USERPROFILE: "C:\\Users\\test", ANVIKA_PROFILE: "jbphoenix" },
+      expected: path.join("C:\\Users\\test", ".anvika-jbphoenix", "gateway.cmd"),
     },
     {
-      name: "prefers OPENCLAW_STATE_DIR over profile-derived defaults",
+      name: "prefers ANVIKA_STATE_DIR over profile-derived defaults",
       env: {
         USERPROFILE: "C:\\Users\\test",
-        OPENCLAW_PROFILE: "rescue",
-        OPENCLAW_STATE_DIR: "C:\\State\\openclaw",
+        ANVIKA_PROFILE: "rescue",
+        ANVIKA_STATE_DIR: "C:\\State\\anvika",
       },
-      expected: path.join("C:\\State\\openclaw", "gateway.cmd"),
+      expected: path.join("C:\\State\\anvika", "gateway.cmd"),
     },
     {
       name: "falls back to HOME when USERPROFILE is not set",
-      env: { HOME: "/home/test", OPENCLAW_PROFILE: "default" },
-      expected: path.join("/home/test", ".openclaw", "gateway.cmd"),
+      env: { HOME: "/home/test", ANVIKA_PROFILE: "default" },
+      expected: path.join("/home/test", ".anvika", "gateway.cmd"),
     },
   ])("$name", ({ env, expected }) => {
     expect(resolveTaskScriptPath(env)).toBe(expected);
@@ -61,12 +61,12 @@ describe("readScheduledTaskCommand", () => {
     },
     run: (env: Record<string, string | undefined>) => Promise<void>,
   ) {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-schtasks-test-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "anvika-schtasks-test-"));
     try {
       const extraEnv = typeof options.env === "function" ? options.env(tmpDir) : options.env;
       const env = {
         USERPROFILE: tmpDir,
-        OPENCLAW_PROFILE: "default",
+        ANVIKA_PROFILE: "default",
         ...extraEnv,
       };
       if (options.scriptLines) {
@@ -117,10 +117,10 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          "rem OpenClaw Gateway",
-          "cd /d C:\\Projects\\openclaw",
+          "rem Anvika Gateway",
+          "cd /d C:\\Projects\\anvika",
           "set NODE_ENV=production",
-          "set OPENCLAW_PORT=18789",
+          "set ANVIKA_PORT=18789",
           "node gateway.js --verbose",
         ],
       },
@@ -128,10 +128,10 @@ describe("readScheduledTaskCommand", () => {
         const result = await readScheduledTaskCommand(env);
         expect(result).toEqual({
           programArguments: ["node", "gateway.js", "--verbose"],
-          workingDirectory: "C:\\Projects\\openclaw",
+          workingDirectory: "C:\\Projects\\anvika",
           environment: {
             NODE_ENV: "production",
-            OPENCLAW_PORT: "18789",
+            ANVIKA_PORT: "18789",
           },
         });
       },
@@ -143,7 +143,7 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          '"C:\\Program Files\\nodejs\\node.exe" C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js gateway --port 18789',
+          '"C:\\Program Files\\nodejs\\node.exe" C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\anvika\\dist\\index.js gateway --port 18789',
         ],
       },
       async (env) => {
@@ -151,7 +151,7 @@ describe("readScheduledTaskCommand", () => {
         expect(result).toEqual({
           programArguments: [
             "C:\\Program Files\\nodejs\\node.exe",
-            "C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\openclaw\\dist\\index.js",
+            "C:\\Users\\test\\AppData\\Roaming\\npm\\node_modules\\anvika\\dist\\index.js",
             "gateway",
             "--port",
             "18789",
@@ -166,15 +166,15 @@ describe("readScheduledTaskCommand", () => {
       {
         scriptLines: [
           "@echo off",
-          '"\\\\fileserver\\OpenClaw Share\\node.exe" "\\\\fileserver\\OpenClaw Share\\dist\\index.js" gateway --port 18789',
+          '"\\\\fileserver\\Anvika Share\\node.exe" "\\\\fileserver\\Anvika Share\\dist\\index.js" gateway --port 18789',
         ],
       },
       async (env) => {
         const result = await readScheduledTaskCommand(env);
         expect(result).toEqual({
           programArguments: [
-            "\\\\fileserver\\OpenClaw Share\\node.exe",
-            "\\\\fileserver\\OpenClaw Share\\dist\\index.js",
+            "\\\\fileserver\\Anvika Share\\node.exe",
+            "\\\\fileserver\\Anvika Share\\dist\\index.js",
             "gateway",
             "--port",
             "18789",
@@ -184,10 +184,10 @@ describe("readScheduledTaskCommand", () => {
     );
   });
 
-  it("reads script from OPENCLAW_STATE_DIR override", async () => {
+  it("reads script from ANVIKA_STATE_DIR override", async () => {
     await withScheduledTaskScript(
       {
-        env: (tmpDir) => ({ OPENCLAW_STATE_DIR: path.join(tmpDir, "custom-state") }),
+        env: (tmpDir) => ({ ANVIKA_STATE_DIR: path.join(tmpDir, "custom-state") }),
         scriptLines: ["@echo off", "node gateway.js --from-state-dir"],
       },
       async (env) => {

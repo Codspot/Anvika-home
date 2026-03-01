@@ -1,11 +1,11 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk";
+import type { AnvikaConfig } from "anvika/plugin-sdk";
 import { resolveBlueBubblesAccount } from "./accounts.js";
 
 export type BlueBubblesAccountResolveOpts = {
   serverUrl?: string;
   password?: string;
   accountId?: string;
-  cfg?: OpenClawConfig;
+  cfg?: AnvikaConfig;
 };
 
 export function resolveBlueBubblesServerAccount(params: BlueBubblesAccountResolveOpts): {

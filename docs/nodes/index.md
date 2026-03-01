@@ -13,7 +13,7 @@ A **node** is a companion device (macOS/iOS/Android/headless) that connects to t
 
 Legacy transport: [Bridge protocol](/gateway/bridge-protocol) (TCP JSONL; deprecated/removed for current nodes).
 
-macOS can also run in **node mode**: the menubar app connects to the Gateway’s WS server and exposes its local canvas/camera commands as a node (so `openclaw nodes …` works against this Mac).
+macOS can also run in **node mode**: the menubar app connects to the Gateway’s WS server and exposes its local canvas/camera commands as a node (so `anvika nodes …` works against this Mac).
 
 Notes:
 
@@ -29,17 +29,17 @@ creates a device pairing request for `role: node`. Approve via the devices CLI (
 Quick CLI:
 
 ```bash
-openclaw devices list
-openclaw devices approve <requestId>
-openclaw devices reject <requestId>
-openclaw nodes status
-openclaw nodes describe --node <idOrNameOrIp>
+anvika devices list
+anvika devices approve <requestId>
+anvika devices reject <requestId>
+anvika nodes status
+anvika nodes describe --node <idOrNameOrIp>
 ```
 
 Notes:
 
 - `nodes status` marks a node as **paired** when its device pairing role includes `node`.
-- `node.pair.*` (CLI: `openclaw nodes pending/approve/reject`) is a separate gateway-owned
+- `node.pair.*` (CLI: `anvika nodes pending/approve/reject`) is a separate gateway-owned
   node pairing store; it does **not** gate the WS `connect` handshake.
 
 ## Remote node host (system.run)
@@ -52,14 +52,14 @@ forwards `exec` calls to the **node host** when `host=node` is selected.
 
 - **Gateway host**: receives messages, runs the model, routes tool calls.
 - **Node host**: executes `system.run`/`system.which` on the node machine.
-- **Approvals**: enforced on the node host via `~/.openclaw/exec-approvals.json`.
+- **Approvals**: enforced on the node host via `~/.anvika/exec-approvals.json`.
 
 ### Start a node host (foreground)
 
 On the node machine:
 
 ```bash
-openclaw node run --host <gateway-host> --port 18789 --display-name "Build Node"
+anvika node run --host <gateway-host> --port 18789 --display-name "Build Node"
 ```
 
 ### Remote gateway via SSH tunnel (loopback bind)
@@ -75,20 +75,20 @@ Example (node host -> gateway host):
 ssh -N -L 18790:127.0.0.1:18789 user@gateway-host
 
 # Terminal B: export the gateway token and connect through the tunnel
-export OPENCLAW_GATEWAY_TOKEN="<gateway-token>"
-openclaw node run --host 127.0.0.1 --port 18790 --display-name "Build Node"
+export ANVIKA_GATEWAY_TOKEN="<gateway-token>"
+anvika node run --host 127.0.0.1 --port 18790 --display-name "Build Node"
 ```
 
 Notes:
 
-- The token is `gateway.auth.token` from the gateway config (`~/.openclaw/openclaw.json` on the gateway host).
-- `openclaw node run` reads `OPENCLAW_GATEWAY_TOKEN` for auth.
+- The token is `gateway.auth.token` from the gateway config (`~/.anvika/anvika.json` on the gateway host).
+- `anvika node run` reads `ANVIKA_GATEWAY_TOKEN` for auth.
 
 ### Start a node host (service)
 
 ```bash
-openclaw node install --host <gateway-host> --port 18789 --display-name "Build Node"
-openclaw node restart
+anvika node install --host <gateway-host> --port 18789 --display-name "Build Node"
+anvika node restart
 ```
 
 ### Pair + name
@@ -96,35 +96,35 @@ openclaw node restart
 On the gateway host:
 
 ```bash
-openclaw nodes pending
-openclaw nodes approve <requestId>
-openclaw nodes list
+anvika nodes pending
+anvika nodes approve <requestId>
+anvika nodes list
 ```
 
 Naming options:
 
-- `--display-name` on `openclaw node run` / `openclaw node install` (persists in `~/.openclaw/node.json` on the node).
-- `openclaw nodes rename --node <id|name|ip> --name "Build Node"` (gateway override).
+- `--display-name` on `anvika node run` / `anvika node install` (persists in `~/.anvika/node.json` on the node).
+- `anvika nodes rename --node <id|name|ip> --name "Build Node"` (gateway override).
 
 ### Allowlist the commands
 
 Exec approvals are **per node host**. Add allowlist entries from the gateway:
 
 ```bash
-openclaw approvals allowlist add --node <id|name|ip> "/usr/bin/uname"
-openclaw approvals allowlist add --node <id|name|ip> "/usr/bin/sw_vers"
+anvika approvals allowlist add --node <id|name|ip> "/usr/bin/uname"
+anvika approvals allowlist add --node <id|name|ip> "/usr/bin/sw_vers"
 ```
 
-Approvals live on the node host at `~/.openclaw/exec-approvals.json`.
+Approvals live on the node host at `~/.anvika/exec-approvals.json`.
 
 ### Point exec at the node
 
 Configure defaults (gateway config):
 
 ```bash
-openclaw config set tools.exec.host node
-openclaw config set tools.exec.security allowlist
-openclaw config set tools.exec.node "<id-or-name>"
+anvika config set tools.exec.host node
+anvika config set tools.exec.security allowlist
+anvika config set tools.exec.node "<id-or-name>"
 ```
 
 Or per session:
@@ -147,7 +147,7 @@ Related:
 Low-level (raw RPC):
 
 ```bash
-openclaw nodes invoke --node <idOrNameOrIp> --command canvas.eval --params '{"javaScript":"location.href"}'
+anvika nodes invoke --node <idOrNameOrIp> --command canvas.eval --params '{"javaScript":"location.href"}'
 ```
 
 Higher-level helpers exist for the common “give the agent a MEDIA attachment” workflows.
@@ -159,17 +159,17 @@ If the node is showing the Canvas (WebView), `canvas.snapshot` returns `{ format
 CLI helper (writes to a temp file and prints `MEDIA:<path>`):
 
 ```bash
-openclaw nodes canvas snapshot --node <idOrNameOrIp> --format png
-openclaw nodes canvas snapshot --node <idOrNameOrIp> --format jpg --max-width 1200 --quality 0.9
+anvika nodes canvas snapshot --node <idOrNameOrIp> --format png
+anvika nodes canvas snapshot --node <idOrNameOrIp> --format jpg --max-width 1200 --quality 0.9
 ```
 
 ### Canvas controls
 
 ```bash
-openclaw nodes canvas present --node <idOrNameOrIp> --target https://example.com
-openclaw nodes canvas hide --node <idOrNameOrIp>
-openclaw nodes canvas navigate https://example.com --node <idOrNameOrIp>
-openclaw nodes canvas eval --node <idOrNameOrIp> --js "document.title"
+anvika nodes canvas present --node <idOrNameOrIp> --target https://example.com
+anvika nodes canvas hide --node <idOrNameOrIp>
+anvika nodes canvas navigate https://example.com --node <idOrNameOrIp>
+anvika nodes canvas eval --node <idOrNameOrIp> --js "document.title"
 ```
 
 Notes:
@@ -180,9 +180,9 @@ Notes:
 ### A2UI (Canvas)
 
 ```bash
-openclaw nodes canvas a2ui push --node <idOrNameOrIp> --text "Hello"
-openclaw nodes canvas a2ui push --node <idOrNameOrIp> --jsonl ./payload.jsonl
-openclaw nodes canvas a2ui reset --node <idOrNameOrIp>
+anvika nodes canvas a2ui push --node <idOrNameOrIp> --text "Hello"
+anvika nodes canvas a2ui push --node <idOrNameOrIp> --jsonl ./payload.jsonl
+anvika nodes canvas a2ui reset --node <idOrNameOrIp>
 ```
 
 Notes:
@@ -194,16 +194,16 @@ Notes:
 Photos (`jpg`):
 
 ```bash
-openclaw nodes camera list --node <idOrNameOrIp>
-openclaw nodes camera snap --node <idOrNameOrIp>            # default: both facings (2 MEDIA lines)
-openclaw nodes camera snap --node <idOrNameOrIp> --facing front
+anvika nodes camera list --node <idOrNameOrIp>
+anvika nodes camera snap --node <idOrNameOrIp>            # default: both facings (2 MEDIA lines)
+anvika nodes camera snap --node <idOrNameOrIp> --facing front
 ```
 
 Video clips (`mp4`):
 
 ```bash
-openclaw nodes camera clip --node <idOrNameOrIp> --duration 10s
-openclaw nodes camera clip --node <idOrNameOrIp> --duration 3000 --no-audio
+anvika nodes camera clip --node <idOrNameOrIp> --duration 10s
+anvika nodes camera clip --node <idOrNameOrIp> --duration 3000 --no-audio
 ```
 
 Notes:
@@ -217,8 +217,8 @@ Notes:
 Nodes expose `screen.record` (mp4). Example:
 
 ```bash
-openclaw nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10
-openclaw nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10 --no-audio
+anvika nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10
+anvika nodes screen record --node <idOrNameOrIp> --duration 10s --fps 10 --no-audio
 ```
 
 Notes:
@@ -236,8 +236,8 @@ Nodes expose `location.get` when Location is enabled in settings.
 CLI helper:
 
 ```bash
-openclaw nodes location get --node <idOrNameOrIp>
-openclaw nodes location get --node <idOrNameOrIp> --accuracy precise --max-age 15000 --location-timeout 10000
+anvika nodes location get --node <idOrNameOrIp>
+anvika nodes location get --node <idOrNameOrIp> --accuracy precise --max-age 15000 --location-timeout 10000
 ```
 
 Notes:
@@ -253,7 +253,7 @@ Android nodes can expose `sms.send` when the user grants **SMS** permission and 
 Low-level invoke:
 
 ```bash
-openclaw nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"+15555550123","message":"Hello from OpenClaw"}'
+anvika nodes invoke --node <idOrNameOrIp> --command sms.send --params '{"to":"+15555550123","message":"Hello from Anvika"}'
 ```
 
 Notes:
@@ -269,8 +269,8 @@ The headless node host exposes `system.run`, `system.which`, and `system.execApp
 Examples:
 
 ```bash
-openclaw nodes run --node <idOrNameOrIp> -- echo "Hello from mac node"
-openclaw nodes notify --node <idOrNameOrIp> --title "Ping" --body "Gateway ready"
+anvika nodes run --node <idOrNameOrIp> -- echo "Hello from mac node"
+anvika nodes notify --node <idOrNameOrIp> --title "Ping" --body "Gateway ready"
 ```
 
 Notes:
@@ -285,7 +285,7 @@ Notes:
 - Node hosts ignore `PATH` overrides and strip dangerous startup/shell keys (`DYLD_*`, `LD_*`, `NODE_OPTIONS`, `PYTHON*`, `PERL*`, `RUBYOPT`, `SHELLOPTS`, `PS4`). If you need extra PATH entries, configure the node host service environment (or install tools in standard locations) instead of passing `PATH` via `--env`.
 - On macOS node mode, `system.run` is gated by exec approvals in the macOS app (Settings → Exec approvals).
   Ask/allowlist/full behave the same as the headless node host; denied prompts return `SYSTEM_RUN_DENIED`.
-- On headless node host, `system.run` is gated by exec approvals (`~/.openclaw/exec-approvals.json`).
+- On headless node host, `system.run` is gated by exec approvals (`~/.anvika/exec-approvals.json`).
 
 ## Exec node binding
 
@@ -295,21 +295,21 @@ This sets the default node for `exec host=node` (and can be overridden per agent
 Global default:
 
 ```bash
-openclaw config set tools.exec.node "node-id-or-name"
+anvika config set tools.exec.node "node-id-or-name"
 ```
 
 Per-agent override:
 
 ```bash
-openclaw config get agents.list
-openclaw config set agents.list[0].tools.exec.node "node-id-or-name"
+anvika config get agents.list
+anvika config set agents.list[0].tools.exec.node "node-id-or-name"
 ```
 
 Unset to allow any node:
 
 ```bash
-openclaw config unset tools.exec.node
-openclaw config unset agents.list[0].tools.exec.node
+anvika config unset tools.exec.node
+anvika config unset agents.list[0].tools.exec.node
 ```
 
 ## Permissions map
@@ -318,28 +318,28 @@ Nodes may include a `permissions` map in `node.list` / `node.describe`, keyed by
 
 ## Headless node host (cross-platform)
 
-OpenClaw can run a **headless node host** (no UI) that connects to the Gateway
+Anvika can run a **headless node host** (no UI) that connects to the Gateway
 WebSocket and exposes `system.run` / `system.which`. This is useful on Linux/Windows
 or for running a minimal node alongside a server.
 
 Start it:
 
 ```bash
-openclaw node run --host <gateway-host> --port 18789
+anvika node run --host <gateway-host> --port 18789
 ```
 
 Notes:
 
 - Pairing is still required (the Gateway will show a node approval prompt).
-- The node host stores its node id, token, display name, and gateway connection info in `~/.openclaw/node.json`.
-- Exec approvals are enforced locally via `~/.openclaw/exec-approvals.json`
+- The node host stores its node id, token, display name, and gateway connection info in `~/.anvika/node.json`.
+- Exec approvals are enforced locally via `~/.anvika/exec-approvals.json`
   (see [Exec approvals](/tools/exec-approvals)).
 - On macOS, the headless node host executes `system.run` locally by default. Set
-  `OPENCLAW_NODE_EXEC_HOST=app` to route `system.run` through the companion app exec host; add
-  `OPENCLAW_NODE_EXEC_FALLBACK=0` to require the app host and fail closed if it is unavailable.
+  `ANVIKA_NODE_EXEC_HOST=app` to route `system.run` through the companion app exec host; add
+  `ANVIKA_NODE_EXEC_FALLBACK=0` to require the app host and fail closed if it is unavailable.
 - Add `--tls` / `--tls-fingerprint` when the Gateway WS uses TLS.
 
 ## Mac node mode
 
-- The macOS menubar app connects to the Gateway WS server as a node (so `openclaw nodes …` works against this Mac).
+- The macOS menubar app connects to the Gateway WS server as a node (so `anvika nodes …` works against this Mac).
 - In remote mode, the app opens an SSH tunnel for the Gateway port and connects to `localhost`.

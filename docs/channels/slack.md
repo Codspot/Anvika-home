@@ -34,7 +34,7 @@ Status: production-ready for DMs + channels via Slack app integrations. Default 
         - install app and copy **Bot Token** (`xoxb-...`)
       </Step>
 
-      <Step title="Configure OpenClaw">
+      <Step title="Configure Anvika">
 
 ```json5
 {
@@ -74,7 +74,7 @@ SLACK_BOT_TOKEN=xoxb-...
       <Step title="Start gateway">
 
 ```bash
-openclaw gateway
+anvika gateway
 ```
 
       </Step>
@@ -92,7 +92,7 @@ openclaw gateway
 
       </Step>
 
-      <Step title="Configure OpenClaw HTTP mode">
+      <Step title="Configure Anvika HTTP mode">
 
 ```json5
 {
@@ -158,7 +158,7 @@ For actions/directory reads, user token can be preferred when configured. For wr
     - Named accounts inherit `channels.slack.allowFrom` when their own `allowFrom` is unset.
     - Named accounts do not inherit `channels.slack.accounts.default.allowFrom`.
 
-    Pairing in DMs uses `openclaw pairing approve slack <code>`.
+    Pairing in DMs uses `anvika pairing approve slack <code>`.
 
   </Tab>
 
@@ -221,7 +221,7 @@ For actions/directory reads, user token can be preferred when configured. For wr
 Default slash command settings:
 
 - `enabled: false`
-- `name: "openclaw"`
+- `name: "anvika"`
 - `sessionPrefix: "slack:slash"`
 - `ephemeral: true`
 
@@ -309,7 +309,7 @@ Available action groups in current Slack tooling:
 
 ## Ack reactions
 
-`ackReaction` sends an acknowledgement emoji while OpenClaw is processing an inbound message.
+`ackReaction` sends an acknowledgement emoji while Anvika is processing an inbound message.
 
 Resolution order:
 
@@ -331,12 +331,12 @@ Notes:
 ```json
 {
   "display_information": {
-    "name": "OpenClaw",
-    "description": "Slack connector for OpenClaw"
+    "name": "Anvika",
+    "description": "Slack connector for Anvika"
   },
   "features": {
     "bot_user": {
-      "display_name": "OpenClaw",
+      "display_name": "Anvika",
       "always_online": false
     },
     "app_home": {
@@ -345,8 +345,8 @@ Notes:
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
-        "description": "Send a message to OpenClaw",
+        "command": "/anvika",
+        "description": "Send a message to Anvika",
         "should_escape": false
       }
     ]
@@ -426,9 +426,9 @@ Notes:
     Useful commands:
 
 ```bash
-openclaw channels status --probe
-openclaw logs --follow
-openclaw doctor
+anvika channels status --probe
+anvika logs --follow
+anvika doctor
 ```
 
   </Accordion>
@@ -441,7 +441,7 @@ openclaw doctor
     - pairing approvals / allowlist entries
 
 ```bash
-openclaw pairing list slack
+anvika pairing list slack
 ```
 
   </Accordion>
@@ -473,7 +473,7 @@ openclaw pairing list slack
 
 ## Text streaming
 
-OpenClaw supports Slack native text streaming via the Agents and AI Apps API.
+Anvika supports Slack native text streaming via the Agents and AI Apps API.
 
 `channels.slack.streaming` controls live preview behavior:
 
@@ -510,7 +510,7 @@ Legacy keys:
 - Later text chunks append to the same stream (`chat.appendStream`).
 - End of reply finalizes stream (`chat.stopStream`).
 - Media and non-text payloads fall back to normal delivery.
-- If streaming fails mid-reply, OpenClaw falls back to normal delivery for remaining payloads.
+- If streaming fails mid-reply, Anvika falls back to normal delivery for remaining payloads.
 
 ## Configuration reference pointers
 

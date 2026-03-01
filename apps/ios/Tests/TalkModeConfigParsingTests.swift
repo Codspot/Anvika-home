@@ -1,5 +1,5 @@
 import Testing
-@testable import OpenClaw
+@testable import Anvika
 
 @MainActor
 @Suite struct TalkModeConfigParsingTests {

@@ -2,10 +2,10 @@ export const SUPERVISOR_HINT_ENV_VARS = [
   // macOS launchd
   "LAUNCH_JOB_LABEL",
   "LAUNCH_JOB_NAME",
-  // OpenClaw service env markers
-  "OPENCLAW_LAUNCHD_LABEL",
-  "OPENCLAW_SYSTEMD_UNIT",
-  "OPENCLAW_SERVICE_MARKER",
+  // Anvika service env markers
+  "ANVIKA_LAUNCHD_LABEL",
+  "ANVIKA_SYSTEMD_UNIT",
+  "ANVIKA_SERVICE_MARKER",
   // Linux systemd
   "INVOCATION_ID",
   "SYSTEMD_EXEC_PID",

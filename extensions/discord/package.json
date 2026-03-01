@@ -1,9 +1,9 @@
 {
-  "name": "@openclaw/discord",
+  "name": "@anvika/discord",
   "version": "2026.2.27",
-  "description": "OpenClaw Discord channel plugin",
+  "description": "Anvika Discord channel plugin",
   "type": "module",
-  "openclaw": {
+  "anvika": {
     "extensions": [
       "./index.ts"
     ]

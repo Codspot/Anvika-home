@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "../../../src/infra/tmp-openclaw-dir.js";
+import { resolvePreferredAnvikaTmpDir } from "../../../src/infra/tmp-anvika-dir.js";
 
 const createFeishuClientMock = vi.hoisted(() => vi.fn());
 const resolveFeishuAccountMock = vi.hoisted(() => vi.fn());
@@ -42,7 +42,7 @@ function expectPathIsolatedToTmpRoot(pathValue: string, key: string): void {
   expect(pathValue).not.toContain(key);
   expect(pathValue).not.toContain("..");
 
-  const tmpRoot = path.resolve(resolvePreferredOpenClawTmpDir());
+  const tmpRoot = path.resolve(resolvePreferredAnvikaTmpDir());
   const resolved = path.resolve(pathValue);
   const rel = path.relative(tmpRoot, resolved);
   expect(rel === ".." || rel.startsWith(`..${path.sep}`)).toBe(false);
@@ -230,7 +230,7 @@ describe("sendMediaFeishu msg_type routing", () => {
       contentType: "application/pdf",
     });
 
-    const roots = ["/allowed/workspace", "/tmp/openclaw"];
+    const roots = ["/allowed/workspace", "/tmp/anvika"];
     await sendMediaFeishu({
       cfg: {} as any,
       to: "user:ou_target",

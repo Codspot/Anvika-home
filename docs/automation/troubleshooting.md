@@ -14,28 +14,28 @@ Use this page for scheduler and delivery issues (`cron` + `heartbeat`).
 ## Command ladder
 
 ```bash
-openclaw status
-openclaw gateway status
-openclaw logs --follow
-openclaw doctor
-openclaw channels status --probe
+anvika status
+anvika gateway status
+anvika logs --follow
+anvika doctor
+anvika channels status --probe
 ```
 
 Then run automation checks:
 
 ```bash
-openclaw cron status
-openclaw cron list
-openclaw system heartbeat last
+anvika cron status
+anvika cron list
+anvika system heartbeat last
 ```
 
 ## Cron not firing
 
 ```bash
-openclaw cron status
-openclaw cron list
-openclaw cron runs --id <jobId> --limit 20
-openclaw logs --follow
+anvika cron status
+anvika cron list
+anvika cron runs --id <jobId> --limit 20
+anvika logs --follow
 ```
 
 Good output looks like:
@@ -53,10 +53,10 @@ Common signatures:
 ## Cron fired but no delivery
 
 ```bash
-openclaw cron runs --id <jobId> --limit 20
-openclaw cron list
-openclaw channels status --probe
-openclaw logs --follow
+anvika cron runs --id <jobId> --limit 20
+anvika cron list
+anvika channels status --probe
+anvika logs --follow
 ```
 
 Good output looks like:
@@ -74,10 +74,10 @@ Common signatures:
 ## Heartbeat suppressed or skipped
 
 ```bash
-openclaw system heartbeat last
-openclaw logs --follow
-openclaw config get agents.defaults.heartbeat
-openclaw channels status --probe
+anvika system heartbeat last
+anvika logs --follow
+anvika config get agents.defaults.heartbeat
+anvika channels status --probe
 ```
 
 Good output looks like:
@@ -95,11 +95,11 @@ Common signatures:
 ## Timezone and activeHours gotchas
 
 ```bash
-openclaw config get agents.defaults.heartbeat.activeHours
-openclaw config get agents.defaults.heartbeat.activeHours.timezone
-openclaw config get agents.defaults.userTimezone || echo "agents.defaults.userTimezone not set"
-openclaw cron list
-openclaw logs --follow
+anvika config get agents.defaults.heartbeat.activeHours
+anvika config get agents.defaults.heartbeat.activeHours.timezone
+anvika config get agents.defaults.userTimezone || echo "agents.defaults.userTimezone not set"
+anvika cron list
+anvika logs --follow
 ```
 
 Quick rules:

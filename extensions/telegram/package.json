@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/telegram",
+  "name": "@anvika/telegram",
   "version": "2026.2.27",
   "private": true,
-  "description": "OpenClaw Telegram channel plugin",
+  "description": "Anvika Telegram channel plugin",
   "type": "module",
-  "openclaw": {
+  "anvika": {
     "extensions": [
       "./index.ts"
     ]

@@ -1,4 +1,4 @@
-import type { ChannelAccountSnapshot, ChannelStatusIssue } from "openclaw/plugin-sdk";
+import type { ChannelAccountSnapshot, ChannelStatusIssue } from "anvika/plugin-sdk";
 
 type ZaloAccountStatus = {
   accountId?: unknown;

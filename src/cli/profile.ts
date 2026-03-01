@@ -94,7 +94,7 @@ function resolveProfileStateDir(
   homedir: () => string,
 ): string {
   const suffix = profile.toLowerCase() === "default" ? "" : `-${profile}`;
-  return path.join(resolveRequiredHomeDir(env as NodeJS.ProcessEnv, homedir), `.openclaw${suffix}`);
+  return path.join(resolveRequiredHomeDir(env as NodeJS.ProcessEnv, homedir), `.anvika${suffix}`);
 }
 
 export function applyCliProfileEnv(params: {
@@ -110,18 +110,18 @@ export function applyCliProfileEnv(params: {
   }
 
   // Convenience only: fill defaults, never override explicit env values.
-  env.OPENCLAW_PROFILE = profile;
+  env.ANVIKA_PROFILE = profile;
 
-  const stateDir = env.OPENCLAW_STATE_DIR?.trim() || resolveProfileStateDir(profile, env, homedir);
-  if (!env.OPENCLAW_STATE_DIR?.trim()) {
-    env.OPENCLAW_STATE_DIR = stateDir;
+  const stateDir = env.ANVIKA_STATE_DIR?.trim() || resolveProfileStateDir(profile, env, homedir);
+  if (!env.ANVIKA_STATE_DIR?.trim()) {
+    env.ANVIKA_STATE_DIR = stateDir;
   }
 
-  if (!env.OPENCLAW_CONFIG_PATH?.trim()) {
-    env.OPENCLAW_CONFIG_PATH = path.join(stateDir, "openclaw.json");
+  if (!env.ANVIKA_CONFIG_PATH?.trim()) {
+    env.ANVIKA_CONFIG_PATH = path.join(stateDir, "anvika.json");
   }
 
-  if (profile === "dev" && !env.OPENCLAW_GATEWAY_PORT?.trim()) {
-    env.OPENCLAW_GATEWAY_PORT = "19001";
+  if (profile === "dev" && !env.ANVIKA_GATEWAY_PORT?.trim()) {
+    env.ANVIKA_GATEWAY_PORT = "19001";
   }
 }

@@ -1,9 +1,9 @@
 import { createActionGate } from "../agents/tools/common.js";
 import type { ChannelMessageActionName, ChannelToolSend } from "../channels/plugins/types.js";
-import type { OpenClawConfig } from "../config/config.js";
+import type { AnvikaConfig } from "../config/config.js";
 import { listEnabledSlackAccounts } from "./accounts.js";
 
-export function listSlackMessageActions(cfg: OpenClawConfig): ChannelMessageActionName[] {
+export function listSlackMessageActions(cfg: AnvikaConfig): ChannelMessageActionName[] {
   const accounts = listEnabledSlackAccounts(cfg).filter(
     (account) => account.botTokenSource !== "none",
   );

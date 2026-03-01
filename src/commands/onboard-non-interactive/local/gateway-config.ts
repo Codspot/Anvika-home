@@ -1,15 +1,15 @@
-import type { OpenClawConfig } from "../../../config/config.js";
+import type { AnvikaConfig } from "../../../config/config.js";
 import type { RuntimeEnv } from "../../../runtime.js";
 import { randomToken } from "../../onboard-helpers.js";
 import type { OnboardOptions } from "../../onboard-types.js";
 
 export function applyNonInteractiveGatewayConfig(params: {
-  nextConfig: OpenClawConfig;
+  nextConfig: AnvikaConfig;
   opts: OnboardOptions;
   runtime: RuntimeEnv;
   defaultPort: number;
 }): {
-  nextConfig: OpenClawConfig;
+  nextConfig: AnvikaConfig;
   port: number;
   bind: string;
   authMode: string;

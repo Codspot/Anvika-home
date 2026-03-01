@@ -1,9 +1,9 @@
 {
-  "name": "@openclaw/mattermost",
+  "name": "@anvika/mattermost",
   "version": "2026.2.27",
-  "description": "OpenClaw Mattermost channel plugin",
+  "description": "Anvika Mattermost channel plugin",
   "type": "module",
-  "openclaw": {
+  "anvika": {
     "extensions": [
       "./index.ts"
     ],
@@ -17,7 +17,7 @@
       "order": 65
     },
     "install": {
-      "npmSpec": "@openclaw/mattermost",
+      "npmSpec": "@anvika/mattermost",
       "localPath": "extensions/mattermost",
       "defaultChoice": "npm"
     }

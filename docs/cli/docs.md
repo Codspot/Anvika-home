@@ -1,15 +1,15 @@
 ---
-summary: "CLI reference for `openclaw docs` (search the live docs index)"
+summary: "CLI reference for `anvika docs` (search the live docs index)"
 read_when:
-  - You want to search the live OpenClaw docs from the terminal
+  - You want to search the live Anvika docs from the terminal
 title: "docs"
 ---
 
-# `openclaw docs`
+# `anvika docs`
 
 Search the live docs index.
 
 ```bash
-openclaw docs browser extension
-openclaw docs sandbox allowHostControl
+anvika docs browser extension
+anvika docs sandbox allowHostControl
 ```

@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/config.js";
+import type { AnvikaConfig } from "../../config/config.js";
 import type { DmPolicy } from "../../config/types.js";
 import type { RuntimeEnv } from "../../runtime.js";
 import type { WizardPrompter } from "../../wizard/prompts.js";
@@ -23,11 +23,11 @@ export type SetupChannelsOptions = {
 };
 
 export type PromptAccountIdParams = {
-  cfg: OpenClawConfig;
+  cfg: AnvikaConfig;
   prompter: WizardPrompter;
   label: string;
   currentId?: string;
-  listAccountIds: (cfg: OpenClawConfig) => string[];
+  listAccountIds: (cfg: AnvikaConfig) => string[];
   defaultAccountId: string;
 };
 
@@ -42,13 +42,13 @@ export type ChannelOnboardingStatus = {
 };
 
 export type ChannelOnboardingStatusContext = {
-  cfg: OpenClawConfig;
+  cfg: AnvikaConfig;
   options?: SetupChannelsOptions;
   accountOverrides: Partial<Record<ChannelId, string>>;
 };
 
 export type ChannelOnboardingConfigureContext = {
-  cfg: OpenClawConfig;
+  cfg: AnvikaConfig;
   runtime: RuntimeEnv;
   prompter: WizardPrompter;
   options?: SetupChannelsOptions;
@@ -58,7 +58,7 @@ export type ChannelOnboardingConfigureContext = {
 };
 
 export type ChannelOnboardingResult = {
-  cfg: OpenClawConfig;
+  cfg: AnvikaConfig;
   accountId?: string;
 };
 
@@ -74,13 +74,13 @@ export type ChannelOnboardingDmPolicy = {
   channel: ChannelId;
   policyKey: string;
   allowFromKey: string;
-  getCurrent: (cfg: OpenClawConfig) => DmPolicy;
-  setPolicy: (cfg: OpenClawConfig, policy: DmPolicy) => OpenClawConfig;
+  getCurrent: (cfg: AnvikaConfig) => DmPolicy;
+  setPolicy: (cfg: AnvikaConfig, policy: DmPolicy) => AnvikaConfig;
   promptAllowFrom?: (params: {
-    cfg: OpenClawConfig;
+    cfg: AnvikaConfig;
     prompter: WizardPrompter;
     accountId?: string;
-  }) => Promise<OpenClawConfig>;
+  }) => Promise<AnvikaConfig>;
 };
 
 export type ChannelOnboardingAdapter = {
@@ -95,5 +95,5 @@ export type ChannelOnboardingAdapter = {
   ) => Promise<ChannelOnboardingConfiguredResult>;
   dmPolicy?: ChannelOnboardingDmPolicy;
   onAccountRecorded?: (accountId: string, options?: SetupChannelsOptions) => void;
-  disable?: (cfg: OpenClawConfig) => OpenClawConfig;
+  disable?: (cfg: AnvikaConfig) => AnvikaConfig;
 };

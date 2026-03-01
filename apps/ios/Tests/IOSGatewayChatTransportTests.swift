@@ -1,6 +1,6 @@
-import OpenClawKit
+import AnvikaKit
 import Testing
-@testable import OpenClaw
+@testable import Anvika
 
 @Suite struct IOSGatewayChatTransportTests {
     @Test func requestsFailFastWhenGatewayNotConnected() async {

@@ -1,1 +1,1 @@
-Maintainer skills now live in [`openclaw/maintainers`](https://github.com/openclaw/maintainers/).
+Maintainer skills now live in [`anvika/maintainers`](https://github.com/anvika/maintainers/).

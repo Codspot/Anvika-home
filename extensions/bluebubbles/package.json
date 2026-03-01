@@ -1,9 +1,9 @@
 {
-  "name": "@openclaw/bluebubbles",
+  "name": "@anvika/bluebubbles",
   "version": "2026.2.27",
-  "description": "OpenClaw BlueBubbles channel plugin",
+  "description": "Anvika BlueBubbles channel plugin",
   "type": "module",
-  "openclaw": {
+  "anvika": {
     "extensions": [
       "./index.ts"
     ],
@@ -25,7 +25,7 @@
       "order": 75
     },
     "install": {
-      "npmSpec": "@openclaw/bluebubbles",
+      "npmSpec": "@anvika/bluebubbles",
       "localPath": "extensions/bluebubbles",
       "defaultChoice": "npm"
     }

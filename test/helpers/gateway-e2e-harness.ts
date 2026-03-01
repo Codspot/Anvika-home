@@ -102,10 +102,10 @@ export async function spawnGatewayInstance(name: string): Promise<GatewayInstanc
   const port = await getFreePort();
   const hookToken = `token-${name}-${randomUUID()}`;
   const gatewayToken = `gateway-${name}-${randomUUID()}`;
-  const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `openclaw-e2e-${name}-`));
-  const configDir = path.join(homeDir, ".openclaw");
+  const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), `anvika-e2e-${name}-`));
+  const configDir = path.join(homeDir, ".anvika");
   await fs.mkdir(configDir, { recursive: true });
-  const configPath = path.join(configDir, "openclaw.json");
+  const configPath = path.join(configDir, "anvika.json");
   const stateDir = path.join(configDir, "state");
   const config = {
     gateway: {
@@ -138,17 +138,17 @@ export async function spawnGatewayInstance(name: string): Promise<GatewayInstanc
         env: {
           ...process.env,
           HOME: homeDir,
-          OPENCLAW_CONFIG_PATH: configPath,
-          OPENCLAW_STATE_DIR: stateDir,
-          OPENCLAW_GATEWAY_TOKEN: "",
-          OPENCLAW_GATEWAY_PASSWORD: "",
-          OPENCLAW_SKIP_CHANNELS: "1",
-          OPENCLAW_SKIP_PROVIDERS: "1",
-          OPENCLAW_SKIP_GMAIL_WATCHER: "1",
-          OPENCLAW_SKIP_CRON: "1",
-          OPENCLAW_SKIP_BROWSER_CONTROL_SERVER: "1",
-          OPENCLAW_SKIP_CANVAS_HOST: "1",
-          OPENCLAW_TEST_MINIMAL_GATEWAY: "1",
+          ANVIKA_CONFIG_PATH: configPath,
+          ANVIKA_STATE_DIR: stateDir,
+          ANVIKA_GATEWAY_TOKEN: "",
+          ANVIKA_GATEWAY_PASSWORD: "",
+          ANVIKA_SKIP_CHANNELS: "1",
+          ANVIKA_SKIP_PROVIDERS: "1",
+          ANVIKA_SKIP_GMAIL_WATCHER: "1",
+          ANVIKA_SKIP_CRON: "1",
+          ANVIKA_SKIP_BROWSER_CONTROL_SERVER: "1",
+          ANVIKA_SKIP_CANVAS_HOST: "1",
+          ANVIKA_TEST_MINIMAL_GATEWAY: "1",
           VITEST: "1",
         },
         stdio: ["ignore", "pipe", "pipe"],
